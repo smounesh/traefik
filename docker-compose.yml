@@ -1,0 +1,26 @@
+# docker-compose file to start up traefik ingress controller
+# to start the container run:
+#    docker-compose up -d
+#
+# Note2: docker container name is sourced from the .env file in this directory.
+#
+# Note3: containrrr/watchtower service will auto update this container
+
+version: "2.4"
+
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik.localhost
+    restart: always
+
+    mem_limit: 256M
+
+    volumes:
+      - ./:/opt/traefik
+      - ./:/etc/traefik
+
+    network_mode: host
+
+    labels:
+      - com.centurylinklabs.watchtower.enable=true

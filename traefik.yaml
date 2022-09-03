@@ -1,0 +1,61 @@
+# Traefik v2.x main configuration file
+# Filename: /opt/traefik/traefik.yaml
+
+# Listen on http, https ports. Forward all http to https using middleware.
+entryPoints:
+  https:
+    address: ':443'
+
+  http:
+    address: ':80'
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+  monitoring:
+    address: ':9100'
+
+  ssh:
+    address: ':2222'
+
+# Use lets-encrypt CA to auto create SSL certificates on demand
+certificatesResolvers:
+  lets-encrypt:
+    acme:
+      email: shankarmounesh.cs20@bitsathy.ac.in
+      storage: /opt/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: http
+
+# Publish API dashboard
+api:
+  dashboard: false
+
+# Health check endpoint to test this traefik service
+#ping:
+#  entryPoint: monitoring
+
+
+# Export prometheus metrics
+metrics:
+  prometheus:
+    addServicesLabels: true
+    addEntryPointsLabels: true
+    entryPoint: monitoring
+
+# Web access log location. See /etc/logrotate.d/traefik.
+accessLog:
+  filePath: /dev/stdout
+
+# Serve applications configured file and docker
+# Docker provider uses labels in docker-compose for auto discovery
+providers:
+  file:
+    directory: /opt/traefik/conf-enabled.d
+    watch: true
+
+  docker:
+    exposedByDefault: false
+    endpoint: "unix:///var/run/docker.sock"
+    watch: true
