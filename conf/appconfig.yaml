@@ -1,0 +1,21 @@
+# Traefik v2.4.0 dynamic config fragment to expose the api dasbboard
+# Filename: /opt/traefik/conf.d/10-app.bitsathy.ac.in.yaml
+# URL: https://app.bitsathy.ac.in
+# Basic Auth: user/pass: admin / secure_password
+
+http:
+  middlewares:
+    apiAuth:
+      basicAuth:
+        users:
+          - 'admin:$apr1$ruca84Hq$mbjdMZBAG.KWn7vfN/SNK/'
+  routers:
+    api:
+      rule: Host(`app.goagain.me`)
+      entrypoints:
+        - https
+      middlewares:
+        - apiAuth
+      service: api@internal
+      tls:
+        certResolver: lets-encrypt
