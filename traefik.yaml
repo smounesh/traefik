@@ -57,5 +57,5 @@ providers:
 
   docker:
     exposedByDefault: false
-    endpoint: "unix:///var/run/docker.sock"
+    endpoint: "tcp://localhost:2375"
     watch: true
